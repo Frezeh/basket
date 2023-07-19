@@ -1,20 +1,27 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StatusBar } from "expo-status-bar";
+import { NavigationContainer } from "@react-navigation/native";
+import { LoginProvider, useLoginContext } from "./src/provider/LoginProvider";
+import { LoginScreenStack } from "./src/navigation/StackNavigation";
+import { BottomTabNavigator } from "./src/navigation/BottomNavigation";
 
-export default function App() {
+export default function AppWrapper() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <LoginProvider>
+      <App />
+    </LoginProvider>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+function App() {
+  const { isAuthenticated } = useLoginContext();
+
+  console.log(isAuthenticated);
+  return (
+    <>
+      <NavigationContainer>
+        {!isAuthenticated ? <LoginScreenStack /> : <BottomTabNavigator />}
+      </NavigationContainer>
+      <StatusBar style="auto" />
+    </>
+  );
+}
